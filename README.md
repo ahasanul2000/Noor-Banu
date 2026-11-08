@@ -3,8 +3,8 @@
 The whole store in one Next.js app: the storefront, its API (`src/app/api`) and the admin panel (`/admin`).
 Data lives in PostgreSQL through Prisma. Payment is Cash on Delivery.
 
-This replaces the Laravel backend (`../backend_lily_crown`) and the separate frontend (`../frontend_lily_crown`),
-which are kept in the repo for reference. The API has the same endpoints and JSON as the Laravel one.
+This replaces the earlier Laravel backend and separate frontend (in the `lily_crown` repository).
+The API has the same endpoints and JSON as the Laravel one.
 
 ## Run it locally
 
@@ -19,7 +19,9 @@ npm run dev                       # http://localhost:3000  (admin: /admin)
 ```
 
 `npm run db:import-laravel` reads `../backend_lily_crown/database/database.sqlite` and
-`../backend_lily_crown/storage/app/public`. It empties the tables first, so only run it on a fresh database.
+`../backend_lily_crown/storage/app/public` by default (pass other paths as arguments:
+`node scripts/import-laravel.mjs <database.sqlite> <storage/app/public>`).
+It empties the tables first, so only run it on a fresh database.
 Old Laravel passwords keep working.
 
 There is no sign-up for staff. Accounts with `is_admin = true` in the `users` table can use `/admin`.
