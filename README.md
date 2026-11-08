@@ -18,6 +18,9 @@ npm run db:import-laravel         # optional: copy data + images from the old La
 npm run dev                       # http://localhost:3000  (admin: /admin)
 ```
 
+`npm run db:seed-demo` adds demo products, blog posts, customers and a month of orders for showing the store
+(runs once per database; demo customers sign in with password `demo1234`).
+
 `npm run db:import-laravel` reads `../backend_lily_crown/database/database.sqlite` and
 `../backend_lily_crown/storage/app/public` by default (pass other paths as arguments:
 `node scripts/import-laravel.mjs <database.sqlite> <storage/app/public>`).
