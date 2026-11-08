@@ -1,0 +1,313 @@
+// Admin panel sections that are plain "list + form" screens.
+// Pure data (no server imports) so both the server (validation, saving) and the client form use it.
+//
+// Field types: text, textarea, richtext, number, money, switch, select, relation, image, images,
+//              rows, datetime, email, url
+// Column types: text (default), image, money, bool, date, count, stock, discount, usage, stars
+
+export const RESOURCES = {
+    products: {
+        model: "product",
+        label: "Products",
+        singular: "product",
+        icon: "shirt",
+        folder: "products",
+        orderBy: { id: "desc" },
+        include: { category: true },
+        search: ["name", "sku", "slug"],
+        slugFrom: "name",
+        columns: [
+            { key: "image", type: "image" },
+            { key: "name", label: "Name" },
+            { key: "sku", label: "SKU" },
+            { key: "category.name", label: "Category" },
+            { key: "price", label: "Price", type: "money" },
+            { key: "sale_price", label: "Sale price", type: "money" },
+            { key: "stock", label: "Stock", type: "stock" },
+            { key: "is_active", label: "Active", type: "bool" },
+            { key: "is_featured", label: "Featured", type: "bool" },
+        ],
+        tabs: ["Basic", "Price & Stock", "Images", "Display"],
+        fields: [
+            { name: "name", label: "Name", type: "text", required: true, max: 255, tab: "Basic" },
+            { name: "slug", label: "Slug", type: "text", max: 255, hint: "Leave empty to generate from the name.", tab: "Basic" },
+            { name: "category_id", label: "Category", type: "relation", relation: "category", required: true, tab: "Basic" },
+            { name: "sku", label: "SKU / Product code", type: "text", max: 100, tab: "Basic" },
+            { name: "description", label: "Description", type: "textarea", rows: 5, tab: "Basic" },
+            { name: "details", label: "Details", type: "rows", columns: [{ key: "info", label: "Detail (fabric, care, fit...)" }], addLabel: "Add detail", tab: "Basic" },
+            { name: "price", label: "Regular price", type: "money", required: true, min: 0, half: true, tab: "Price & Stock" },
+            { name: "sale_price", label: "Sale price", type: "money", min: 0, half: true, hint: "Optional discounted price. Leave empty for no discount.", tab: "Price & Stock" },
+            {
+                name: "variants", label: "Sizes & stock", type: "rows", addLabel: "Add size", tab: "Price & Stock",
+                columns: [{ key: "size", label: "Size (e.g. S, M, 38, Free)" }, { key: "stock", label: "Stock", type: "number" }],
+                hint: "Add sizes if this product comes in sizes — stock is tracked per size. Leave empty for one-size products.",
+            },
+            { name: "stock", label: "Stock (one-size products only)", type: "number", min: 0, default: 0, hint: "Ignored when sizes are added above.", tab: "Price & Stock" },
+            { name: "colors", label: "Colours", type: "rows", columns: [{ key: "name", label: "Colour name" }], addLabel: "Add colour", hint: "Optional — customers pick a colour when ordering.", tab: "Price & Stock" },
+            { name: "image", label: "Main image", type: "image", required: true, tab: "Images" },
+            { name: "gallery", label: "Gallery images", type: "images", hint: "Extra photos shown on the product page. You can select several files at once.", tab: "Images" },
+            { name: "badge", label: "Badge", type: "text", max: 50, hint: "Small label on the product card, e.g. New, Sale, Bestseller.", tab: "Display" },
+            { name: "is_active", label: "Visible on website", type: "switch", default: true, tab: "Display" },
+            { name: "is_featured", label: "Featured on homepage", type: "switch", tab: "Display" },
+            { name: "is_trending", label: "Show in Trending", type: "switch", tab: "Display" },
+            { name: "sort_order", label: "Sort order", type: "number", default: 0, hint: "Lower numbers appear first.", tab: "Display" },
+        ],
+    },
+
+    categories: {
+        model: "category",
+        label: "Categories",
+        singular: "category",
+        icon: "folder",
+        folder: "categories",
+        orderBy: [{ sort_order: "asc" }, { name: "asc" }],
+        countRelation: "products",
+        search: ["name", "slug"],
+        slugFrom: "name",
+        columns: [
+            { key: "image", type: "image" },
+            { key: "name", label: "Name" },
+            { key: "slug", label: "Slug" },
+            { key: "_count.products", label: "Products", type: "count" },
+            { key: "sort_order", label: "Order" },
+            { key: "is_active", label: "Active", type: "bool" },
+        ],
+        fields: [
+            { name: "name", label: "Name", type: "text", required: true, max: 255 },
+            { name: "slug", label: "Slug", type: "text", max: 255, hint: "Used in the URL, e.g. /shop?category=sarees. Leave empty to generate." },
+            { name: "description", label: "Description", type: "textarea" },
+            { name: "image", label: "Image", type: "image", hint: "Shown on the homepage category grid." },
+            { name: "icon", label: "Icon", type: "text", max: 100, hint: "Optional Font Awesome class, e.g. fa-person-dress" },
+            { name: "sort_order", label: "Sort order", type: "number", default: 0, hint: "Lower numbers appear first." },
+            { name: "is_active", label: "Visible on website", type: "switch", default: true },
+        ],
+    },
+
+    coupons: {
+        model: "coupon",
+        label: "Coupons",
+        singular: "coupon",
+        icon: "ticket",
+        orderBy: { id: "desc" },
+        search: ["code"],
+        columns: [
+            { key: "code", label: "Code" },
+            { key: "value", label: "Discount", type: "discount" },
+            { key: "min_order_amount", label: "Min order", type: "money" },
+            { key: "used_count", label: "Used", type: "usage" },
+            { key: "expires_at", label: "Expires", type: "date" },
+            { key: "is_active", label: "Active", type: "bool" },
+        ],
+        fields: [
+            { name: "code", label: "Code", type: "text", required: true, max: 50, pattern: "^[A-Za-z0-9_-]+$", hint: "Customers type this at checkout, e.g. EID20. Saved in capitals." },
+            { name: "type", label: "Type", type: "select", required: true, half: true, default: "percent", options: { percent: "Percentage (%)", fixed: "Fixed amount (৳)" } },
+            { name: "value", label: "Discount value", type: "number", step: "0.01", required: true, min: 0.01, half: true },
+            { name: "min_order_amount", label: "Minimum order amount", type: "money", min: 0, default: 0, half: true },
+            { name: "max_discount", label: "Maximum discount", type: "money", min: 0, half: true, hint: "Optional cap for percentage coupons." },
+            { name: "usage_limit", label: "Usage limit", type: "number", min: 1, half: true, hint: "Total number of orders that can use it. Leave empty for unlimited." },
+            { name: "used_count", label: "Times used", type: "number", readOnly: true, default: 0, half: true },
+            { name: "starts_at", label: "Starts at", type: "datetime", half: true },
+            { name: "expires_at", label: "Expires at", type: "datetime", half: true },
+            { name: "is_active", label: "Active", type: "switch", default: true },
+        ],
+    },
+
+    "hero-slides": {
+        model: "heroSlide",
+        label: "Hero slides",
+        singular: "hero slide",
+        icon: "image",
+        folder: "banners",
+        orderBy: [{ sort_order: "asc" }, { id: "asc" }],
+        search: ["title"],
+        columns: [
+            { key: "image", type: "image" },
+            { key: "title", label: "Title" },
+            { key: "button_link", label: "Link" },
+            { key: "sort_order", label: "Order" },
+            { key: "is_active", label: "Active", type: "bool" },
+        ],
+        fields: [
+            { name: "title", label: "Title", type: "text", required: true, max: 255 },
+            { name: "highlight", label: "Highlight", type: "text", max: 100, hint: 'A word from the title to show in gold, e.g. "Royalty".' },
+            { name: "subtitle", label: "Subtitle", type: "textarea" },
+            { name: "image", label: "Image", type: "image", required: true, hint: "Portrait image works best (e.g. 1200×1500)." },
+            { name: "button_text", label: "Button text", type: "text", max: 60, half: true },
+            { name: "button_link", label: "Button link", type: "text", max: 255, half: true, hint: "e.g. /shop?category=sarees" },
+            { name: "sort_order", label: "Sort order", type: "number", default: 0 },
+            { name: "is_active", label: "Active", type: "switch", default: true },
+        ],
+    },
+
+    lookbook: {
+        model: "lookbook",
+        label: "Lookbook",
+        singular: "lookbook item",
+        icon: "book",
+        folder: "lookbook",
+        orderBy: [{ sort_order: "asc" }, { id: "asc" }],
+        include: { product: true },
+        search: ["title", "category_name"],
+        columns: [
+            { key: "image", type: "image" },
+            { key: "title", label: "Title" },
+            { key: "product.name", label: "Linked product" },
+            { key: "sort_order", label: "Order" },
+            { key: "is_active", label: "Active", type: "bool" },
+        ],
+        fields: [
+            { name: "title", label: "Title", type: "text", required: true, max: 255 },
+            { name: "image", label: "Image", type: "image", required: true },
+            { name: "product_id", label: "Linked product", type: "relation", relation: "product" },
+            { name: "category_name", label: "Category label", type: "text", max: 100, hint: "Optional label when no product is linked." },
+            { name: "sort_order", label: "Sort order", type: "number", default: 0 },
+            { name: "is_active", label: "Active", type: "switch", default: true },
+        ],
+    },
+
+    testimonials: {
+        model: "testimonial",
+        label: "Testimonials",
+        singular: "testimonial",
+        icon: "quote",
+        folder: "testimonials",
+        orderBy: [{ sort_order: "asc" }, { id: "asc" }],
+        search: ["name", "content"],
+        columns: [
+            { key: "image", type: "image" },
+            { key: "name", label: "Name" },
+            { key: "content", label: "Review", truncate: 80 },
+            { key: "rating", label: "Rating", type: "stars" },
+            { key: "is_active", label: "Active", type: "bool" },
+        ],
+        fields: [
+            { name: "name", label: "Name", type: "text", required: true, max: 255, half: true },
+            { name: "role", label: "Location / title", type: "text", max: 255, half: true },
+            { name: "content", label: "Review", type: "textarea", required: true, max: 1000 },
+            { name: "rating", label: "Rating", type: "select", required: true, default: "5", options: { 5: "★★★★★", 4: "★★★★", 3: "★★★", 2: "★★", 1: "★" }, integer: true },
+            { name: "image", label: "Photo", type: "image" },
+            { name: "sort_order", label: "Sort order", type: "number", default: 0 },
+            { name: "is_active", label: "Active", type: "switch", default: true },
+        ],
+    },
+
+    features: {
+        model: "feature",
+        label: "Features",
+        singular: "feature",
+        icon: "gem",
+        orderBy: [{ sort_order: "asc" }, { id: "asc" }],
+        search: ["title"],
+        columns: [
+            { key: "title", label: "Title" },
+            { key: "icon", label: "Icon" },
+            { key: "description", label: "Description", truncate: 80 },
+            { key: "is_active", label: "Active", type: "bool" },
+        ],
+        fields: [
+            { name: "title", label: "Title", type: "text", required: true, max: 255 },
+            { name: "description", label: "Description", type: "textarea" },
+            { name: "icon", label: "Icon", type: "select", required: true, default: "gem", options: { gem: "Gem", crown: "Crown", shield: "Shield", truck: "Truck" } },
+            { name: "sort_order", label: "Sort order", type: "number", default: 0 },
+            { name: "is_active", label: "Active", type: "switch", default: true },
+        ],
+    },
+
+    "instagram-posts": {
+        model: "instagramPost",
+        label: "Instagram posts",
+        singular: "Instagram post",
+        icon: "camera",
+        folder: "instagram",
+        orderBy: [{ sort_order: "asc" }, { id: "asc" }],
+        search: ["caption"],
+        columns: [
+            { key: "image", type: "image" },
+            { key: "caption", label: "Caption" },
+            { key: "link", label: "Link" },
+            { key: "is_active", label: "Active", type: "bool" },
+        ],
+        fields: [
+            { name: "image", label: "Image", type: "image", required: true },
+            { name: "caption", label: "Caption", type: "text", max: 255 },
+            { name: "link", label: "Link", type: "url", max: 500, hint: "Link to the Instagram post." },
+            { name: "sort_order", label: "Sort order", type: "number", default: 0 },
+            { name: "is_active", label: "Active", type: "switch", default: true },
+        ],
+    },
+
+    blogs: {
+        model: "blog",
+        label: "Blog posts",
+        singular: "blog post",
+        icon: "pen",
+        folder: "blog",
+        orderBy: { created_at: "desc" },
+        search: ["title", "slug"],
+        slugFrom: "title",
+        columns: [
+            { key: "thumbnail", type: "image" },
+            { key: "title", label: "Title" },
+            { key: "slug", label: "Slug" },
+            { key: "created_at", label: "Published", type: "date" },
+        ],
+        fields: [
+            { name: "title", label: "Title", type: "text", required: true, max: 255 },
+            { name: "slug", label: "Slug", type: "text", max: 255, hint: "Will be generated automatically if left empty." },
+            { name: "content", label: "Content", type: "richtext", required: true },
+            { name: "thumbnail", label: "Thumbnail", type: "image" },
+        ],
+    },
+
+    "site-settings": {
+        model: "siteSetting",
+        label: "Site settings",
+        singular: "setting",
+        icon: "settings",
+        orderBy: { key: "asc" },
+        search: ["key", "value"],
+        perPage: 100,
+        columns: [
+            { key: "key", label: "Key" },
+            { key: "value", label: "Value", truncate: 90 },
+            { key: "type", label: "Type" },
+        ],
+        fields: [
+            { name: "key", label: "Key", type: "text", required: true, max: 100, pattern: "^[a-z0-9_]+$", hint: "Lowercase letters, numbers and _ only, e.g. contact_phone." },
+            { name: "type", label: "Type", type: "select", required: true, default: "text", options: { text: "Text", textarea: "Textarea", email: "Email", url: "URL", number: "Number" } },
+            { name: "value", label: "Value", type: "textarea", hint: "Checkout uses shipping_inside_dhaka, shipping_outside_dhaka and free_shipping_threshold (0 turns free delivery off)." },
+        ],
+    },
+
+    subscribers: {
+        model: "subscriber",
+        label: "Subscribers",
+        singular: "subscriber",
+        icon: "mail",
+        orderBy: { id: "desc" },
+        search: ["email"],
+        columns: [
+            { key: "email", label: "Email" },
+            { key: "created_at", label: "Subscribed", type: "date" },
+        ],
+        fields: [{ name: "email", label: "Email", type: "email", required: true, max: 150 }],
+    },
+};
+
+/** Fields that must be unique per table (checked before saving). */
+export const UNIQUE_FIELDS = {
+    products: ["slug"],
+    categories: ["slug"],
+    coupons: ["code"],
+    blogs: ["slug"],
+    "site-settings": ["key"],
+    subscribers: ["email"],
+};
+
+/** Options for relation fields: which model to list and how to label it. */
+export const RELATIONS = {
+    category: { model: "category", label: "name", orderBy: { name: "asc" } },
+    product: { model: "product", label: "name", orderBy: { name: "asc" } },
+};
+
+export const getResource = (key) => (Object.hasOwn(RESOURCES, key) ? RESOURCES[key] : null);

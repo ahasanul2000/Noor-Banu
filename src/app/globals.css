@@ -1,0 +1,294 @@
+@import "tailwindcss";
+
+@theme {
+  --color-heritage-gold: #996515;
+  --color-emerald-royal: #064E3B;
+  --color-deep-maroon: #4C0519;
+  --color-muslin-cream: #FDFBF7;
+  --color-luxury-black: #121212;
+  --color-rose-gold: #B76E79;
+  --color-gold-accent: #D4AF37;
+
+  --font-serif: var(--font-serif), serif;
+  --font-sans: var(--font-sans), sans-serif;
+
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-fade-in-up: fadeInUp 0.8s ease-out forwards;
+  --animate-shimmer: shimmer 3s infinite linear;
+
+  @keyframes float {
+
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+
+    50% {
+      transform: translateY(-15px);
+    }
+  }
+
+  @keyframes fadeInUp {
+    0% {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes shimmer {
+    0% {
+      background-position: -200% 0;
+    }
+
+    100% {
+      background-position: 200% 0;
+    }
+  }
+
+  @keyframes grain {
+
+    0%,
+    100% {
+      transform: translate(0, 0);
+    }
+
+    10% {
+      transform: translate(-5%, -10%);
+    }
+
+    30% {
+      transform: translate(3%, -15%);
+    }
+
+    50% {
+      transform: translate(12%, 9%);
+    }
+
+    70% {
+      transform: translate(-9%, 4%);
+    }
+
+    90% {
+      transform: translate(2%, 11%);
+    }
+  }
+
+  @keyframes heart-beat {
+
+    0%,
+    100% {
+      transform: scale(1);
+    }
+
+    50% {
+      transform: scale(1.15);
+    }
+  }
+}
+
+:root {
+  --background: #FDFBF7;
+  --foreground: #121212;
+  /* Height of the fixed navbar (incl. announcement bar). Navbar.jsx keeps this in sync;
+     these are first-paint fallbacks. */
+  --nav-h: 88px;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --nav-h: 126px;
+  }
+}
+
+/* Push page content below the fixed navbar. */
+.pt-nav {
+  padding-top: calc(var(--nav-h) + 2rem);
+}
+
+.pt-nav-lg {
+  padding-top: calc(var(--nav-h) + 3.5rem);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Luxurious Royal Scrollbar Implementation */
+::-webkit-scrollbar {
+  width: 14px;
+  height: 14px;
+}
+
+::-webkit-scrollbar-track {
+  background: #121212;
+  border-left: 1px solid rgba(153, 101, 21, 0.05);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #996515, #D4AF37, #996515);
+  background-clip: padding-box;
+  border: 4px solid transparent;
+  border-radius: 100px;
+  transition: all 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #D4AF37, #FDFBF7, #D4AF37);
+  background-clip: padding-box;
+  border: 3px solid transparent;
+}
+
+/* Firefox Compatibility */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: #996515 #121212;
+}
+
+img {
+  image-rendering: auto;
+  content-visibility: auto;
+}
+
+/* Optimization for "onk onk fast" */
+section {
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 500px;
+}
+
+@utility glass-nav {
+  background: rgba(253, 251, 247, 0.8);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(153, 101, 21, 0.1);
+}
+
+@utility heritage-gradient-text {
+  background: linear-gradient(to right, #996515, #D4AF37, #996515);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+@utility gold-gradient-bg {
+  background: linear-gradient(135deg, #996515 0%, #D4AF37 50%, #996515 100%);
+}
+
+@utility nakshi-border {
+  border: 1px solid rgba(153, 101, 21, 0.2);
+  position: relative;
+}
+
+@utility jamdani-pattern {
+  background-image: radial-gradient(rgba(153, 101, 21, 0.05) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+@utility royal-shadow {
+  box-shadow: 0 20px 40px -15px rgba(6, 78, 59, 0.1);
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Accessibility: Respect user's motion preferences */
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+@utility bg-radial-vignette {
+  background: radial-gradient(circle at center, transparent 0%, rgba(0, 0, 0, 0.18) 100%);
+}
+
+@utility animate-grain {
+  animation: grain 8s steps(10) infinite;
+  background-image: url('https://www.transparenttextures.com/patterns/stardust.png');
+}
+
+@keyframes border-glow {
+
+  0%,
+  100% {
+    opacity: 0.3;
+    border-color: rgba(153, 101, 21, 0.2);
+  }
+
+  50% {
+    opacity: 1;
+    border-color: rgba(212, 175, 55, 0.6);
+  }
+}
+
+@utility animate-luxury-shimmer {
+  animation: shimmer 2s infinite linear;
+  background: linear-gradient(90deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.03) 25%,
+      rgba(255, 255, 255, 0.15) 50%,
+      rgba(255, 255, 255, 0.03) 75%,
+      rgba(255, 255, 255, 0) 100%);
+  background-size: 200% 100%;
+}
+
+@utility animate-gold-shimmer {
+  animation: shimmer 2.5s infinite linear;
+  background: linear-gradient(90deg,
+      transparent 0%,
+      rgba(212, 175, 55, 0.05) 25%,
+      rgba(255, 215, 0, 0.25) 50%,
+      rgba(212, 175, 55, 0.05) 75%,
+      transparent 100%);
+  background-size: 200% 100%;
+}
+
+@utility royal-border-shimmer {
+  border: 1px solid rgba(153, 101, 21, 0.3);
+  animation: border-glow 4s ease-in-out infinite;
+}
+/* Preloader already shown this session (flag set by an inline script in layout.jsx). */
+html[data-preloaded] .lc-preloader {
+  display: none !important;
+}
+
+/* Noor Banu wordmark — gold foil text to match the round logo. */
+@utility brand-wordmark {
+  font-family: var(--font-serif), serif;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.28em;
+  line-height: 1;
+  white-space: nowrap;
+  background: linear-gradient(100deg, #7a4f0f 0%, #b8862f 28%, #f1d27a 50%, #b8862f 72%, #7a4f0f 100%);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  transition: background-position 0.8s ease;
+}
+
+@utility brand-rule {
+  display: block;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #b8862f);
+}

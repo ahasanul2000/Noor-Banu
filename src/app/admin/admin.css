@@ -1,0 +1,160 @@
+/* Admin panel building blocks (plain CSS so it doesn't depend on the storefront theme). */
+
+.admin-label {
+    display: block;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: #44403c;
+    margin-bottom: 0.35rem;
+}
+
+.admin-input {
+    display: block;
+    width: 100%;
+    border: 1px solid #d6d3d1;
+    border-radius: 0.6rem;
+    background: #fff;
+    padding: 0.55rem 0.75rem;
+    font-size: 0.9rem;
+    color: #1c1917;
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.admin-input:focus {
+    outline: none;
+    border-color: #b8862f;
+    box-shadow: 0 0 0 3px rgba(184, 134, 47, 0.18);
+}
+
+.admin-input[aria-invalid="true"] {
+    border-color: #e11d48;
+}
+
+.admin-input:disabled,
+.admin-input[readonly] {
+    background: #f5f5f4;
+    color: #78716c;
+}
+
+.admin-hint {
+    font-size: 0.75rem;
+    color: #78716c;
+    margin-top: 0.3rem;
+}
+
+.admin-error {
+    font-size: 0.75rem;
+    color: #be123c;
+    margin-top: 0.3rem;
+}
+
+.admin-btn,
+.admin-btn-primary,
+.admin-btn-danger {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    border-radius: 0.6rem;
+    padding: 0.55rem 1rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    transition: background-color 0.15s, color 0.15s, border-color 0.15s, opacity 0.15s;
+    white-space: nowrap;
+}
+
+.admin-btn {
+    background: #fff;
+    border: 1px solid #d6d3d1;
+    color: #292524;
+}
+
+.admin-btn:hover {
+    border-color: #a8a29e;
+    background: #fafaf9;
+}
+
+.admin-btn-primary {
+    background: #064e3b;
+    border: 1px solid #064e3b;
+    color: #fff;
+}
+
+.admin-btn-primary:hover {
+    background: #053d2f;
+}
+
+.admin-btn-danger {
+    background: #fff;
+    border: 1px solid #fecdd3;
+    color: #be123c;
+}
+
+.admin-btn-danger:hover {
+    background: #fff1f2;
+}
+
+.admin-btn:disabled,
+.admin-btn-primary:disabled,
+.admin-btn-danger:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.admin-card {
+    background: #fff;
+    border: 1px solid #e7e5e4;
+    border-radius: 1rem;
+}
+
+.admin-table {
+    width: 100%;
+    font-size: 0.875rem;
+    border-collapse: collapse;
+}
+
+.admin-table th {
+    text-align: left;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #78716c;
+    font-weight: 700;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #e7e5e4;
+    background: #fafaf9;
+    white-space: nowrap;
+}
+
+.admin-table td {
+    padding: 0.7rem 1rem;
+    border-bottom: 1px solid #f5f5f4;
+    vertical-align: middle;
+}
+
+.admin-table tbody tr:hover {
+    background: #fdfcfa;
+}
+
+.admin-badge {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 999px;
+    padding: 0.15rem 0.6rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+/* Rich text preview/editor content */
+.admin-prose h2 { font-size: 1.25rem; font-weight: 700; margin: 1rem 0 0.5rem; }
+.admin-prose h3 { font-size: 1.05rem; font-weight: 700; margin: 0.9rem 0 0.4rem; }
+.admin-prose p { margin: 0.5rem 0; }
+.admin-prose ul { list-style: disc; padding-left: 1.4rem; margin: 0.5rem 0; }
+.admin-prose ol { list-style: decimal; padding-left: 1.4rem; margin: 0.5rem 0; }
+.admin-prose a { color: #996515; text-decoration: underline; }
+.admin-prose blockquote { border-left: 3px solid #d6c39b; padding-left: 0.8rem; color: #57534e; margin: 0.6rem 0; }
+
+@media print {
+    .admin-no-print { display: none !important; }
+    body { background: #fff !important; }
+}
