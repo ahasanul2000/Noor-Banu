@@ -14,7 +14,8 @@
     "db:import-laravel": "node scripts/import-laravel.mjs",
     "test": "node --test --test-concurrency=1 \"tests/**/*.test.mjs\"",
     "test:server": "DATABASE_URL=postgresql://postgres@localhost:5432/noor_banu_test?schema=public NEXT_DIST_DIR=.next-test next dev --webpack -p 3002",
-    "test:db": "DATABASE_URL=postgresql://postgres@localhost:5432/noor_banu_test?schema=public prisma migrate deploy"
+    "test:db": "DATABASE_URL=postgresql://postgres@localhost:5432/noor_banu_test?schema=public prisma migrate deploy",
+    "db:images-to-blob": "node scripts/upload-images-to-blob.mjs"
   },
   "dependencies": {
     "@prisma/adapter-pg": "7.10.1",

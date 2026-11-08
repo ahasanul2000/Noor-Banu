@@ -58,7 +58,13 @@ npm test                          # terminal 2
 6. Deploy. Sign in at `https://<your-site>/admin`.
 
 **Images from the import.** The import copies old images into `public/uploads`, which is not in git.
-For the live site, re-upload them from the admin panel, or commit `public/uploads` (remove that line from `.gitignore`).
+Move them to Blob and point the online database at them:
+```bash
+DATABASE_URL="<online url>" BLOB_READ_WRITE_TOKEN="<token>" npm run db:images-to-blob
+```
+
+Server functions run in Singapore (`vercel.json`), next to the Neon database, which is close to
+both Bangladesh and Australia.
 
 ## Where things are
 
