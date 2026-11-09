@@ -5,8 +5,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 
 const SEEN_KEY = "lc_preloaded";
-const MIN_VISIBLE_MS = 600;
-const MAX_VISIBLE_MS = 1200;
+// Long enough to read the logo, the name and the tagline in turn (it still shows only once per session).
+const MIN_VISIBLE_MS = 3000;
+const MAX_VISIBLE_MS = 3600;
 
 export function Preloader() {
     const [loading, setLoading] = useState(true);
@@ -14,8 +15,8 @@ export function Preloader() {
     const [mounted, setMounted] = useState(false);
     const containerRef = useRef(null);
 
-    // Shown once per browser session, and only until the page has loaded (max ~1.2s) so it never
-    // holds customers up. layout.jsx marks <html data-preloaded> before paint on later visits,
+    // Shown once per browser session, for about 3 seconds (logo → name → tagline), so first-time
+    // visitors can read the brand without being held up on later pages. layout.jsx marks <html data-preloaded> before paint on later visits,
     // which hides the overlay via CSS so it doesn't flash.
     useEffect(() => {
         let seen = false;
@@ -40,11 +41,12 @@ export function Preloader() {
             const wait = Math.max(0, MIN_VISIBLE_MS - (Date.now() - start));
             setTimeout(() => {
                 setProgress(100);
-                setTimeout(() => setLoading(false), 150);
+                setTimeout(() => setLoading(false), 350);
             }, wait);
         };
 
-        const tick = setInterval(() => setProgress((p) => Math.min(90, p + 9)), 60);
+        // Fill the gold thread steadily over the ~3s the overlay is shown.
+        const tick = setInterval(() => setProgress((p) => Math.min(90, p + 3)), 100);
         const maxTimer = setTimeout(finish, MAX_VISIBLE_MS);
         if (document.readyState === "complete") finish();
         else window.addEventListener("load", finish);
@@ -72,7 +74,7 @@ export function Preloader() {
                         scale: 1.1,
                         filter: "blur(40px)",
                         pointerEvents: "none",
-                        transition: { duration: 0.45, ease: [0.7, 0, 0.3, 1] }
+                        transition: { duration: 0.8, ease: [0.7, 0, 0.3, 1] }
                     }}
                     className="lc-preloader fixed inset-0 bg-[#080808] z-[99999] flex flex-col justify-center items-center overflow-hidden"
                 >
@@ -112,7 +114,7 @@ export function Preloader() {
                         <motion.div
                             initial={{ opacity: 0, scale: 0.8, y: 20, filter: "blur(20px)" }}
                             animate={{ opacity: 1, scale: 1, y: 0, filter: "blur(0px)" }}
-                            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+                            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
                             className="relative w-40 h-40 md:w-56 md:h-56 mb-16"
                         >
                             {/* Inner Aura */}
@@ -136,7 +138,7 @@ export function Preloader() {
                             <motion.h1
                                 initial={{ letterSpacing: "1.5em", opacity: 0, filter: "blur(10px)", x: "0.75em" }}
                                 animate={{ letterSpacing: "0.6em", opacity: 1, filter: "blur(0px)", x: "0.3em" }}
-                                transition={{ delay: 0.1, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                                transition={{ delay: 0.5, duration: 1.3, ease: [0.16, 1, 0.3, 1] }}
                                 className="font-serif text-3xl md:text-5xl text-heritage-gold font-medium tracking-[0.6em] whitespace-nowrap"
                             >
                                 {title}
@@ -147,7 +149,7 @@ export function Preloader() {
                         <motion.div
                             initial={{ opacity: 0, y: 10 }}
                             animate={{ opacity: 0.5, y: 0 }}
-                            transition={{ delay: 0.3, duration: 0.6 }}
+                            transition={{ delay: 1.4, duration: 0.8 }}
                             className="flex items-center gap-4 mb-16"
                         >
                             <div className="w-8 h-[0.5px] bg-heritage-gold/30" />
@@ -162,7 +164,7 @@ export function Preloader() {
                             <motion.div
                                 initial={{ x: "-100%" }}
                                 animate={{ x: `${progress - 100}%` }}
-                                transition={{ duration: 0.4, ease: "easeOut" }}
+                                transition={{ duration: 0.6, ease: "easeOut" }}
                                 className="absolute inset-0 bg-gradient-to-r from-transparent via-heritage-gold to-transparent opacity-80"
                             />
                             {/* Glow Tip */}
@@ -176,7 +178,7 @@ export function Preloader() {
                         <motion.p
                             initial={{ opacity: 0 }}
                             animate={{ opacity: [0, 0.4, 0.2] }}
-                            transition={{ delay: 0.4, duration: 1.5, repeat: Infinity, repeatType: "reverse" }}
+                            transition={{ delay: 1.8, duration: 1.5, repeat: Infinity, repeatType: "reverse" }}
                             className="mt-8 text-[8px] uppercase tracking-[0.6em] text-heritage-gold/50 font-bold"
                         >
                             Curating The Royal Collection
